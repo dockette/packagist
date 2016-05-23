@@ -8,9 +8,9 @@ nginx:
     - php
 
   ports:
-    # Dev
-    - 8000:8000
     # Stable
+    - 8000:8000
+    # Dev
     - 9000:9000
 
 php:
@@ -18,6 +18,12 @@ php:
 
   volumes_from:
     - data
+
+  volumes:
+    # - ./ssh/config:/home/dfx/.ssh/config
+    # - ./ssh/id_rsa:/home/dfx/.ssh/id_rsa
+    # - ./ssh/id_rsa.pub:/home/dfx/.ssh/id_rsa.pub
+    # - ./ssh/known_hosts:/home/dfx/.ssh/known_hosts
 
   environment:
     - COMPOSER_HOME=/home/dfx/packagist
