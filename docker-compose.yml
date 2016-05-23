@@ -1,0 +1,61 @@
+nginx:
+  image: dockette/packagist:nginx
+
+  volumes_from:
+    - data
+
+  links:
+    - php
+
+  ports:
+    # Dev
+    - 8000:8000
+    # Stable
+    - 9000:9000
+
+php:
+  image: dockette/packagist:php
+
+  volumes_from:
+    - data
+
+  environment:
+    - COMPOSER_HOME=/home/dfx/packagist
+
+  links:
+    - db
+    - redis
+    - solr
+
+db:
+  image: mariadb:10.1
+
+  volumes:
+    - ./data/mysql:/var/lib/mysql
+  
+  environment:
+    - MYSQL_ROOT_PASSWORD=root
+    - MYSQL_DATABASE=packagist
+    - MYSQL_USER=packagist
+    - MYSQL_PASSWORD=packagist
+
+redis:
+  image: redis:3.0
+
+  volumes:
+    - ./data/redis:/data
+
+solr:
+  image: dockette/packagist:solr
+
+  volumes:
+   - ./data/solr:/opt/solr/server/solr/packagist
+
+  environment:
+    - SOLR_UID=1000
+
+data:
+  image: busybox
+
+  volumes:
+    - ./app:/srv
