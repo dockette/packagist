@@ -1,3 +1,3 @@
-* * * * 5 dfx /src/app/console packagist:update --no-debug --env=prod
-* * * * 5 dfx /src/app/console packagist:dump --no-debug --env=prod
-* * * * 5 dfx /src/app/console packagist:index --no-debug --env=prod
+* * * * 5 dfx php /src/app/console packagist:update --no-debug --env=prod
+* * * * 5 dfx php /src/app/console packagist:dump --no-debug --env=prod
+* * * * 5 dfx php /src/app/console packagist:index --no-debug --env=prod
