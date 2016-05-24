@@ -41,13 +41,16 @@ ssh-keygen -t rsa -b 4096 -c 'Packagist'
 
 ### Solr
 
-Based on my SOLR image.
+Based on my SOLR (5.5) image.
 
 You have to manually create collection via script `create-collection.sh`.
+And then add it to volumes. Or something like that.
 
 ```sh
 docker exec -it packagist_solr_1 sh create-collection.sh
 ```
+
+> I had to updated the scheme for Solr 5.5. Be careful.
 
 ## Data
 
