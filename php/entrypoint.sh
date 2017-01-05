@@ -11,7 +11,6 @@ CRON_LOG_FILE=${CRON_LOG_FILE:-/var/log/cron.log}
 
 echo "[PACKAGIST] SSH_ENABLED=${SSH_ENABLED}"
 echo "[PACKAGIST] USER_NAME=${USER_NAME}"
-echo "[PACKAGIST] USER_NAME=${USER_NAME}"
 echo "[PACKAGIST] USER_WORKDIR=${USER_WORKDIR}"
 echo "[PACKAGIST] USER_SSH_DIR=${USER_SSH_DIR}"
 echo "[PACKAGIST] USER_SSH_TPL_DIR=${USER_SSH_TPL_DIR}"
@@ -57,8 +56,10 @@ if [ "$CRON_ENABLED" ]; then
 
     if [ "$CRON_STDOUT" ]; then
         # Forward cron to STDOUT
-        echo "[PACKAGIST] Remove cron file (${CRON_LOG_FILE})"
-        rm "${CRON_LOG_FILE}"
+        if [ -f "$CRON_LOG_FILE" ]; then
+            echo "[PACKAGIST] Remove cron file (${CRON_LOG_FILE})"
+            rm "${CRON_LOG_FILE}"
+        fi 
         echo "[PACKAGIST] Forward ${CRON_LOG_FILE} to STDOUT (/dev/stdout)"
         ln -sf /dev/stdout "${CRON_LOG_FILE}"
     else
