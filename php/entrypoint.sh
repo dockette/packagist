@@ -1,6 +1,6 @@
 #!/bin/bash
 
-USER_NAME=${USER_NAME:-www}
+USER_NAME=${USER_NAME:-www-data}
 USER_WORKDIR=${USER_WORKDIR:-/var/www}
 USER_SSH_DIR=${USER_WORKDIR}/.ssh
 USER_SSH_TPL_DIR=/tpl/ssh
@@ -8,10 +8,17 @@ PACKAGIST_DIR=${PACKAGIST_DIR:-/srv}
 CRON_LOG_FILE=${CRON_LOG_FILE:-/var/log/cron.log}
 
 # Display variables
+
+echo "[PACKAGIST] SSH_ENABLED=${SSH_ENABLED}"
+echo "[PACKAGIST] USER_NAME=${USER_NAME}"
 echo "[PACKAGIST] USER_NAME=${USER_NAME}"
 echo "[PACKAGIST] USER_WORKDIR=${USER_WORKDIR}"
 echo "[PACKAGIST] USER_SSH_DIR=${USER_SSH_DIR}"
 echo "[PACKAGIST] USER_SSH_TPL_DIR=${USER_SSH_TPL_DIR}"
+echo "[PACKAGIST] PACKAGIST_DIR=${PACKAGIST_DIR}"
+echo "[PACKAGIST] CRON_ENABLED=${CRON_ENABLED}"
+echo "[PACKAGIST] CRON_STDOUT=${CRON_STDOUT}"
+echo "[PACKAGIST] CRON_LOG_FILE=${CRON_LOG_FILE}"
 
 # Check if .ssh directory does not exit
 if [ "$SSH_ENABLED" ]; then
@@ -33,6 +40,7 @@ if [ "$SSH_ENABLED" ]; then
             [[ -f "${USER_SSH_DIR}"/config ]] && chmod 644 "${USER_SSH_DIR}"/config
 
             # Ensure ownership
+            echo "[PACKAGIST] Ensure properly ownership of (${USER_SSH_DIR})"
             chown "${USER_NAME}":"${USER_NAME}" -R "${USER_SSH_DIR}"
         else
             echo "[PACKAGIST] SSH template not found (${USER_SSH_TPL_DIR})"
@@ -45,8 +53,21 @@ fi
 # Start cron deamon
 if [ "$CRON_ENABLED" ]; then 
     echo "[PACKAGIST] Starting cron"
-    touch /var/
     cron
+
+    if [ "$CRON_STDOUT" ]; then
+        # Forward cron to STDOUT
+        echo "[PACKAGIST] Remove cron file (${CRON_LOG_FILE})"
+        rm "${CRON_LOG_FILE}"
+        echo "[PACKAGIST] Forward ${CRON_LOG_FILE} to STDOUT (/dev/stdout)"
+        ln -sf /dev/stdout "${CRON_LOG_FILE}"
+    else
+        echo "[PACKAGIST] Touching cron log file (${CRON_LOG_FILE})"
+        touch "${CRON_LOG_FILE}"
+    fi
+
+    echo "[PACKAGIST] Ensure properly ownership of (${CRON_LOG_FILE})"
+    chown "${USER_NAME}":"${USER_NAME}" "${CRON_LOG_FILE}"
 fi
 
 # Setup composer directory
@@ -70,12 +91,6 @@ else
     echo "[PACKAGIST] Skip setup of packagist APP directories" 
 fi
 
-# Start PHP deamon
-echo "[PACKAGIST] Start PHP 7.0 FPM"
+# Start PHP 7.0.x with FPM
+echo "[PACKAGIST] Start PHP 7.0.x FPM (nodeamonize)"
 php-fpm7.0 -F
-
-# Tailing cron log
-if [ "$CRON_LOG_ENABLED" ]; then 
-    echo "[PACKAGIST] Start tailing cron"
-    tail -f /var/log/cron.log
-fi
