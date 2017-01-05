@@ -1,22 +1,28 @@
-FROM dockette/php:7-fpm
+FROM dockette/php7-fpm
 
 MAINTAINER Milan Sulc <sulcmil@gmail.com>
 
-ENV USER_HOME=/home/dfx
+# CONFIGURATION
+ENV SSH_ENABLED=true
+ENV CRON_ENABLED=true
+ENV CRON_LOG_ENABLED=true
+ENV USER_NAME=www-data
+ENV USER_WORKDIR=/var/www
+ENV CRON_LOG_FILE=/var/log/cron.log
+
+# INSTALLATION
+RUN apt-get update && apt-get dist-upgrade -y && \
+    # DEPENDENCIES #############################################################
+	apt-get install -y git cron && \
+    # CLEAN UP #################################################################
+    apt-get clean -y && apt-get autoclean -y && apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/* /var/lib/log/* /tmp/* /var/tmp/*
 
 # PHP configuration
 ADD ./php/php-fpm.conf /etc/php/7.0/fpm/php-fpm.conf
 
 # SSH settings
-ADD ./ssh $USER_HOME/.ssh
-
-RUN apt-get update && apt-get install -y git rsyslog && \
-    chown dfx:dfx $USER_HOME/.ssh -R && \
-    chmod 700 $USER_HOME/.ssh && \
-    chmod 600 $USER_HOME/.ssh/id_rsa && \
-    chmod 644 $USER_HOME/.ssh/id_rsa.pub && \
-    apt-get clean -y && apt-get autoclean -y && apt-get autoremove -y && \
-    rm -rf /var/lib/apt/lists/* /var/lib/log/* /tmp/* /var/tmp/*
+ADD ./ssh /tpl/ssh
 
 # Crontab
 ADD ./cron/packagist /etc/cron.d/packagist
@@ -24,5 +30,4 @@ ADD ./cron/packagist /etc/cron.d/packagist
 # Entrypoint
 ADD ./entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-
 CMD ["/entrypoint.sh"]

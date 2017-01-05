@@ -1,67 +1,76 @@
-nginx:
-  image: dockette/packagist:nginx
+version: '2'
 
-  volumes_from:
-    - data
+services:
 
-  links:
-    - php
+  nginx:
+    restart: always
+    image: dockette/packagist:nginx
 
-  ports:
-    # Stable
-    - 8000:8000
-    # Dev
-    - 9000:9000
+    volumes_from:
+      - data
 
-php:
-  image: dockette/packagist:php
+    depends_on:
+      - php
 
-  volumes_from:
-    - data
+    ports:
+      # Production mode
+      - 8000:8000
 
-  # volumes:
-  #   - ./ssh/config:/home/dfx/.ssh/config
-  #   - ./ssh/id_rsa:/home/dfx/.ssh/id_rsa
-  #   - ./ssh/id_rsa.pub:/home/dfx/.ssh/id_rsa.pub
-  #   - ./ssh/known_hosts:/home/dfx/.ssh/known_hosts
+      # Development mode
+      - 9000:9000
 
-  environment:
-    - COMPOSER_HOME=/home/dfx/packagist
+  php:
+    restart: always
+    image: dockette/packagist:php
 
-  links:
-    - db
-    - redis
-    - solr
+    volumes_from:
+      - data
 
-db:
-  image: mariadb:10.1
+    volumes:
+      - ./config/ssh/config:/home/dfx/.ssh/config
+      - ./config/ssh/id_rsa:/home/dfx/.ssh/id_rsa
+      - ./config/ssh/id_rsa.pub:/home/dfx/.ssh/id_rsa.pub
+      - ./config/ssh/known_hosts:/home/dfx/.ssh/known_hosts
 
-  volumes:
-    - ./data/mysql:/var/lib/mysql
-  
-  environment:
-    - MYSQL_ROOT_PASSWORD=root
-    - MYSQL_DATABASE=packagist
-    - MYSQL_USER=packagist
-    - MYSQL_PASSWORD=packagist
+    depends_on:
+      - mysql
+      - redis
+      - solr
 
-redis:
-  image: redis:3.0
+  mysql:
+    restart: always
+    image: mariadb:10.1
 
-  volumes:
-    - ./data/redis:/data
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=packagist
+      - MYSQL_USER=packagist
+      - MYSQL_PASSWORD=packagist
 
-solr:
-  image: dockette/packagist:solr
+  redis:
+    restart: always
+    image: redis:3.2
 
-  volumes:
-   - ./data/solr:/opt/solr/server/solr/packagist
+    volumes:
+      - ./data/redis:/data
 
-  environment:
-    - SOLR_UID=1000
+  solr:
+    image: solr:6.3-alpine
 
-data:
-  image: busybox
+    volumes:
+      - ./data/solr:/opt/solr/server/solr/packagist
+      - ./data/solr-mycores:/opt/solr/server/solr/mycores
 
-  volumes:
-    - ./app:/srv
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr-precreate
+      - packagist
+
+  data:
+    image: busybox
+
+    volumes:
+      - ./app:/srv
