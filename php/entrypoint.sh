@@ -16,9 +16,9 @@ echo "[PACKAGIST] USER_SSH_TPL_DIR=${USER_SSH_TPL_DIR}"
 # Check if .ssh directory does not exit
 if [ "$SSH_ENABLED" ]; then
     if [ ! -d "$USER_SSH_DIR" ]; then
-        echo "[PACKAGIST] User SSH folder does not exist"
+        echo "[PACKAGIST] User SSH folder does not exist (${USER_SSH_DIR})"
         mkdir -p ${USER_SSH_DIR}
-        echo "[PACKAGIST] Creating user SSH folder: ${USER_SSH_DIR}"
+        echo "[PACKAGIST] Creating user SSH folder (${USER_SSH_DIR})"
 
         if [ -d "$USER_SSH_TPL_DIR" ]; then
             echo "[PACKAGIST] Copying SSH template (${USER_SSH_TPL_DIR} => ${USER_SSH_DIR})"
@@ -35,10 +35,10 @@ if [ "$SSH_ENABLED" ]; then
             # Ensure ownership
             chown "${USER_NAME}":"${USER_NAME}" -R "${USER_SSH_DIR}"
         else
-            echo "[PACKAGIST] SSH template not found"
+            echo "[PACKAGIST] SSH template not found (${USER_SSH_TPL_DIR})"
         fi
     else 
-        echo "[PACKAGIST] User SSH folder exist"
+        echo "[PACKAGIST] Taking user SSH folder (${USER_SSH_DIR})"
     fi
 fi
 
