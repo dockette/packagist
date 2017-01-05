@@ -16,7 +16,6 @@ echo "[PACKAGIST] USER_SSH_DIR=${USER_SSH_DIR}"
 echo "[PACKAGIST] USER_SSH_TPL_DIR=${USER_SSH_TPL_DIR}"
 echo "[PACKAGIST] PACKAGIST_DIR=${PACKAGIST_DIR}"
 echo "[PACKAGIST] CRON_ENABLED=${CRON_ENABLED}"
-echo "[PACKAGIST] CRON_STDOUT=${CRON_STDOUT}"
 echo "[PACKAGIST] CRON_LOG_FILE=${CRON_LOG_FILE}"
 
 # Check if .ssh directory does not exit
@@ -54,21 +53,12 @@ if [ "$CRON_ENABLED" ]; then
     echo "[PACKAGIST] Starting cron"
     cron
 
-    if [ "$CRON_STDOUT" ]; then
-        # Forward cron to STDOUT
-        if [ -f "$CRON_LOG_FILE" ]; then
-            echo "[PACKAGIST] Remove cron file (${CRON_LOG_FILE})"
-            rm "${CRON_LOG_FILE}"
-        fi 
-        echo "[PACKAGIST] Forward ${CRON_LOG_FILE} to STDOUT (/dev/stdout)"
-        ln -sf /dev/stdout "${CRON_LOG_FILE}"
-    else
-        echo "[PACKAGIST] Touching cron log file (${CRON_LOG_FILE})"
-        touch "${CRON_LOG_FILE}"
-    fi
+    echo "[PACKAGIST] Touching cron log file (${CRON_LOG_FILE})"
+    touch "${CRON_LOG_FILE}"
 
-    echo "[PACKAGIST] Ensure properly ownership of (${CRON_LOG_FILE})"
+    echo "[PACKAGIST] Ensure properly ownership and mode (0775) of (${CRON_LOG_FILE})"
     chown "${USER_NAME}":"${USER_NAME}" "${CRON_LOG_FILE}"
+    chmod 0775 "${CRON_LOG_FILE}"
 fi
 
 # Setup composer directory
