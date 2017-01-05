@@ -1,3 +1,6 @@
-*/5 * * * * www-data php /src/app/console packagist:update --no-debug --env=prod >> ${CRON_LOG_FILE} 2>&1
-*/5 * * * * www-data php /src/app/console packagist:dump --no-debug --env=prod >> ${CRON_LOG_FILE} 2>&1
-*/5 * * * * www-data php /src/app/console packagist:index --no-debug --env=prod >> ${CRON_LOG_FILE} 2>&1
+LOG_FILE=${CRON_LOG_FILE:-/var/log/cron.log}
+SHEL=/bin/bash
+
+*/5 * * * * www-data php /src/app/console packagist:update --no-debug --env=prod >> ${LOG_FILE} 2>&1
+*/5 * * * * www-data php /src/app/console packagist:dump --no-debug --env=prod >> ${LOG_FILE} 2>&1
+*/5 * * * * www-data php /src/app/console packagist:index --no-debug --env=prod >> ${LOG_FILE} 2>&1
