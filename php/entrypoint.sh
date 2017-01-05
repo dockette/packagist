@@ -57,7 +57,7 @@ if [ ! -d "${USER_WORKDIR}/.composer" ]; then
 fi
 
 # Setup app directories
-if [ -d "${PACKAGIST_DIR}"]; then
+if [ -d "${PACKAGIST_DIR}" ]; then
     if [ -d "${PACKAGIST_DIR}/app/cache" ]; then
         echo "[PACKAGIST] Setup chmod 0777 for ${PACKAGIST_DIR}/app/cache"
         chmod 0777 "${PACKAGIST_DIR}/app/cache"
@@ -67,7 +67,7 @@ if [ -d "${PACKAGIST_DIR}"]; then
         chmod 0777 "${PACKAGIST_DIR}/app/logs"
     fi 
 else
-    echo "[PACKAGIST] Skip setupping packagist APP directories" 
+    echo "[PACKAGIST] Skip setup of packagist APP directories" 
 fi
 
 # Start PHP deamon
