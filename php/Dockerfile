@@ -1,4 +1,4 @@
-FROM dockette/php7-fpm
+FROM dockette/php71-fpm
 
 MAINTAINER Milan Sulc <sulcmil@gmail.com>
 
@@ -19,7 +19,7 @@ RUN apt-get update && apt-get dist-upgrade -y && \
     rm -rf /var/lib/apt/lists/* /var/lib/log/* /tmp/* /var/tmp/*
 
 # PHP configuration
-ADD ./php/php-fpm.conf /etc/php/7.0/fpm/php-fpm.conf
+ADD ./php/php-fpm.conf /etc/php/7.1/fpm/php-fpm.conf
 
 # SSH settings
 ADD ./ssh /tpl/ssh

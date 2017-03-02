@@ -82,6 +82,6 @@ else
     echo "[PACKAGIST] Skip setup of packagist APP directories" 
 fi
 
-# Start PHP 7.0.x with FPM
-echo "[PACKAGIST] Start PHP 7.0.x FPM (nodeamonize)"
+# Start PHP 7.1 with FPM
+echo "[PACKAGIST] Start PHP 7.1 FPM (nodeamonize)"
 php-fpm7.0 -F
