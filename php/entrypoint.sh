@@ -84,4 +84,4 @@ fi
 
 # Start PHP 7.1 with FPM
 echo "[PACKAGIST] Start PHP 7.1 FPM (nodeamonize)"
-php-fpm7.0 -F
+php-fpm7.1 -F
