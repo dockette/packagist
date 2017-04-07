@@ -2,35 +2,28 @@ version: '2'
 
 services:
 
-  nginx:
+  packagist:
     restart: always
-    image: dockette/packagist:nginx
-
-    volumes_from:
-      - data
-
-    depends_on:
-      - php
+    build: ./packagist
+    #image: dockette/packagist:app
 
     ports:
       # Production mode
       - 8000:8000
-
+      - 80:8000
+      #- 443:8000
       # Development mode
       - 9000:9000
+      # Supervisor
+      - 9001:9001
 
-  php:
-    restart: always
-    image: dockette/packagist:php
-
-    volumes_from:
-      - data
-
-    volumes:
-      - ./config/ssh/config:/home/dfx/.ssh/config
-      - ./config/ssh/id_rsa:/home/dfx/.ssh/id_rsa
-      - ./config/ssh/id_rsa.pub:/home/dfx/.ssh/id_rsa.pub
-      - ./config/ssh/known_hosts:/home/dfx/.ssh/known_hosts
+      # You should create your own SSH keys
+      # ===================================
+      #volumes:
+      #  - ./config/ssh/config:/home/dfx/.ssh/config
+      #  - ./config/ssh/id_rsa:/home/dfx/.ssh/id_rsa
+      #  - ./config/ssh/id_rsa.pub:/home/dfx/.ssh/id_rsa.pub
+      #  - ./config/ssh/known_hosts:/home/dfx/.ssh/known_hosts
 
     depends_on:
       - mysql
@@ -58,19 +51,8 @@ services:
       - ./data/redis:/data
 
   solr:
-    image: solr:6.3-alpine
+    build: ./solr
+    # image: dockette/packagist:solr
 
     volumes:
-      - ./data/solr:/opt/solr/server/solr/packagist
-      - ./data/solr-mycores:/opt/solr/server/solr/mycores
-
-    entrypoint:
-      - docker-entrypoint.sh
-      - solr-precreate
-      - packagist
-
-  data:
-    image: busybox
-
-    volumes:
-      - ./app:/srv
+      - ./data/solr:/opt/solr/server/solr/mycores

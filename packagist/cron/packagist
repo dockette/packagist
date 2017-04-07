@@ -1,0 +1,5 @@
+#!/bin/bash
+
+su www-data -s /bin/sh -c 'php /srv/app/console packagist:update --no-debug -v --force --env=prod' >> ${CRON_LOG_FILE} 2>&1
+su www-data -s /bin/sh -c 'php /srv/app/console packagist:dump --no-debug -v --force --env=prod' >> ${CRON_LOG_FILE} 2>&1
+su www-data -s /bin/sh -c 'php /srv/app/console packagist:index --no-debug -v --force --env=prod' >> ${CRON_LOG_FILE} 2>&1

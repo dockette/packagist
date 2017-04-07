@@ -15,12 +15,65 @@ Well-prepeared Packagist docker image(s). Run you own composer packagist portal 
 
 This whole project concists of 4 containers and 1 data-only container.
 
-- Nginx (proxy/webserver)
-- PHP (backend)
+- Packagist (nginx,php)
 - Redis (memory story)
 - Solr (search engine)
 - Busybox (data-only)
 
-## 
+## Installation
 
-@todo
+Download prepared `docker-compose.yml` to your pc / server.
+
+### Solr
+
+Create `data/solr` folder a chown file permission to ID `8983`.
+
+```
+chown 8983:8983 data/solr
+```
+
+### Packagist
+
+You should change prepared configuration.
+
+- `PACKAGIST_DATABASE_USER` (packagist)
+- `PACKAGIST_DATABASE_PASSWORD` (packagist)
+
+## Usage
+
+Type `docker-compose up -d` and see the magic.
+
+
+### MySQL
+
+Execute all packagist MySQL migrations.
+
+```
+docker-compose exec packagist /srv/app/console doctrine:schema:create
+```
+
+### Packagist
+
+Please create your account and add some composer package.
+
+```
+docker-compose exec packagist /srv/app/console packagist:update --no-debug --env=prod --force
+docker-compose exec packagist /srv/app/console packagist:dump --no-debug --env=prod --force
+```
+
+Attribute `force` is needed for the first-run.
+
+### Solr
+
+Index your first composer package. 
+
+```
+docker-compose exec packagist /srv/app/console packagist:index --no-debug --env=prod --force
+```
+
+## Cron
+
+Cron is configured per 1 minute. You can change by replacing these files:
+
+- /etc/crontabs/root
+- /etc/periodic/1min/packagist
