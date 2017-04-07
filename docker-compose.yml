@@ -4,8 +4,7 @@ services:
 
   packagist:
     restart: always
-    build: ./packagist
-    #image: dockette/packagist:app
+    image: dockette/packagist:app
 
     ports:
       # Production mode
@@ -15,16 +14,20 @@ services:
       # Development mode
       - 9000:9000
       # Supervisor
-      - 9001:9001
+      #- 9001:9001
 
       # You should create your own SSH keys
       # ===================================
       #volumes:
-      #  - ./config/ssh/config:/home/dfx/.ssh/config
-      #  - ./config/ssh/id_rsa:/home/dfx/.ssh/id_rsa
-      #  - ./config/ssh/id_rsa.pub:/home/dfx/.ssh/id_rsa.pub
-      #  - ./config/ssh/known_hosts:/home/dfx/.ssh/known_hosts
+      #  - ./config/ssh/config:/var/www/.ssh/config
+      #  - ./config/ssh/id_rsa://var/www/.ssh/id_rsa
+      #  - ./config/ssh/id_rsa.pub:/var/www/.ssh/id_rsa.pub
+      #  - ./config/ssh/known_hosts:/var/www/.ssh/known_hosts
 
+    environment:
+      - PACKAGIST_DATABASE_USER=packagist
+      - PACKAGIST_DATABASE_PASSWORD=packagist
+    
     depends_on:
       - mysql
       - redis
@@ -51,8 +54,7 @@ services:
       - ./data/redis:/data
 
   solr:
-    build: ./solr
-    # image: dockette/packagist:solr
+    image: dockette/packagist:solr
 
     volumes:
       - ./data/solr:/opt/solr/server/solr/mycores
