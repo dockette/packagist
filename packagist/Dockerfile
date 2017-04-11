@@ -19,6 +19,7 @@ RUN apk update && \
     # DEPENDENCIES #############################################################
     apk add --update \
         git \
+        mercurial \
         curl \
         bash \
         supervisor \
