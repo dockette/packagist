@@ -83,7 +83,6 @@ ADD ./cron/packagist /etc/periodic/1min/packagist
 # Supervisor
 ADD ./supervisor/supervisord.conf /etc/supervisord.conf
 
-VOLUME /srv
 WORKDIR /srv
 
 EXPOSE 80
