@@ -47,6 +47,7 @@ RUN apk update && \
         php7-pdo@testing \
         php7-pdo_mysql@testing \
         php7-session@testing \
+        php7-tokenizer@testing \
         php7-xmlwriter@testing \
         php7-zip@testing \
         php7-xml@testing \
