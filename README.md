@@ -57,8 +57,8 @@ docker-compose exec packagist /srv/app/console doctrine:schema:create
 Please create your account and add some composer package.
 
 ```
-docker-compose exec packagist /srv/app/console packagist:update --no-debug --env=prod --force
-docker-compose exec packagist /srv/app/console packagist:dump --no-debug --env=prod --force
+docker-compose exec --user www-data packagist /srv/app/console packagist:update --no-debug --env=prod --force
+docker-compose exec --user www-data packagist /srv/app/console packagist:dump --no-debug --env=prod --force
 ```
 
 Attribute `force` is needed for the first-run.
