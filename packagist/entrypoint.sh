@@ -132,7 +132,7 @@ if [ -d "${PACKAGIS_ROOT_DIR}" ]; then
 
     mkdir -p "${PACKAGIS_ROOT_DIR}/web"
     echo "[PACKAGIST] Setup owerneship for ${PACKAGIS_ROOT_DIR}/web"
-    chmod ${USER_NAME}:${USER_NAME} "${PACKAGIS_ROOT_DIR}/web"
+    chown -R ${USER_NAME}:${USER_NAME} "${PACKAGIS_ROOT_DIR}/web"
 else
     echo "[PACKAGIST] Skip setup of packagist APP directories" 
 fi
