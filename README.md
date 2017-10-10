@@ -13,7 +13,7 @@ Well-prepeared Packagist docker image(s). Run you own composer packagist portal 
 
 ## Architecture
 
-This whole project concists of 4 containers and 1 data-only container.
+This whole project consists of 4 containers and 1 data-only container.
 
 - Packagist (nginx,php)
 - Redis (memory story)
