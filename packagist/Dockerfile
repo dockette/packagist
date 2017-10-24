@@ -57,6 +57,7 @@ RUN apk update && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
     composer global require "hirak/prestissimo:^0.3" && \
     git clone https://github.com/composer/packagist.git /srv && \
+    git reset --hard 2d90743bec035e87928f4afa356ba28a1547608f && \
     composer install -d /srv --no-dev --no-interaction --no-scripts -v -o && \
     # SUPERVISOR ###############################################################
     mkdir -p /run/nginx && \
