@@ -1,4 +1,4 @@
-FROM dockette/edge
+FROM dockette/alpine:3.7
 
 MAINTAINER Milan Sulc <sulcmil@gmail.com>
 
@@ -55,9 +55,8 @@ RUN apk update && \
         php7-xmlreader@testing && \
     # COMPOSER #################################################################
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
-    composer global require "hirak/prestissimo:^0.3" && \
     git clone https://github.com/composer/packagist.git /srv && \
-    git reset --hard 2d90743bec035e87928f4afa356ba28a1547608f && \
+    git -C /srv reset --hard 2d90743bec035e87928f4afa356ba28a1547608f && \
     composer install -d /srv --no-dev --no-interaction --no-scripts -v -o && \
     # SUPERVISOR ###############################################################
     mkdir -p /run/nginx && \
