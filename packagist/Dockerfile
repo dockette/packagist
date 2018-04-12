@@ -23,6 +23,7 @@ RUN apk update && \
         curl \
         bash \
         supervisor \
+        openssl \
         nginx \
         php7@testing \
         php7-bcmath@testing \
@@ -64,7 +65,7 @@ RUN apk update && \
     rm -rf /var/cache/apk/*
 
 # WEB
-ADD ./web/app_dev.php /srv/app/web/app_dev.php
+ADD ./web/app_dev.php /srv/web/app_dev.php
 
 # PHP
 ADD ./php/php-fpm.conf /etc/php/7.1/fpm/php-fpm.conf
