@@ -16,9 +16,11 @@ Well-prepeared Packagist docker image(s). Run you own composer packagist portal 
 This whole project consists of 4 containers and 1 data-only container.
 
 - Packagist (nginx,php)
-- Redis (memory story)
+- MariaDB (database)
+- Redis (memory storage)
 - Solr (search engine)
-- Busybox (data-only)
+
+This version is [locked to](https://github.com/composer/packagist/commit/2d90743bec035e87928f4afa356ba28a1547608f) version before Packagist switched search engine to Algolia. 
 
 ## Installation
 
@@ -62,6 +64,24 @@ docker-compose exec --user www-data packagist /srv/app/console packagist:dump --
 ```
 
 Attribute `force` is needed for the first-run.
+
+#### SSH
+
+You can provide your own SSH keys, just uncommenting lines in docker-compose.yml.
+
+```
+volumes:
+  - ./config/ssh/config:/var/www/.ssh/config
+  - ./config/ssh/id_rsa://var/www/.ssh/id_rsa
+  - ./config/ssh/id_rsa.pub:/var/www/.ssh/id_rsa.pub
+  - ./config/ssh/known_hosts:/var/www/.ssh/known_hosts
+```
+
+Don't forget to change owernership to Alpine's user www-data (82:82).
+
+```
+sudo chown -R 82:82 config id_rsa id_rsa.pub known_hosts 
+```
 
 ### Solr
 
