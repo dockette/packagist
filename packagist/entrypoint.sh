@@ -47,7 +47,7 @@ PACKAGIST_REMEMBER_ME_SECRET=${PACKAGIST_REMEMBER_ME_SECRET:=C4OGyv6kdNoD5syhF2M
 # ==========================================================
 # ==========================================================
 
-# Copy & replace packagist parameters 
+# Copy & replace packagist parameters
 echo "[Packagist] Copying parameters.yml.dist to parameters.yml"
 cp ${PACKAGIST_CONFIG_PARAMETERS_TPL} ${PACKAGIST_CONFIG_PARAMETERS}
 
@@ -85,6 +85,7 @@ if [ "$SSH_ENABLED" ]; then
 
             # Ensure permissions
             chmod 700 "${USER_SSH_DIR}"
+            chown -R "${USER_NAME}":"${USER_NAME}" "${USER_SSH_DIR}"
             [[ -f "${USER_SSH_DIR}"/id_rsa ]] && chmod 600 "${USER_SSH_DIR}"/id_rsa
             [[ -f "${USER_SSH_DIR}"/id_rsa.pub ]] && chmod 644 "${USER_SSH_DIR}"/id_rsa.pub
             [[ -f "${USER_SSH_DIR}"/known_hosts ]] && chmod 644 "${USER_SSH_DIR}"/known_hosts
@@ -96,7 +97,7 @@ if [ "$SSH_ENABLED" ]; then
         else
             echo "[PACKAGIST] SSH template not found (${USER_SSH_TPL_DIR})"
         fi
-    else 
+    else
         echo "[PACKAGIST] Taking user SSH folder (${USER_SSH_DIR})"
     fi
 fi
@@ -134,7 +135,7 @@ if [ -d "${PACKAGIS_ROOT_DIR}" ]; then
     echo "[PACKAGIST] Setup owerneship for ${PACKAGIS_ROOT_DIR}/web"
     chown -R ${USER_NAME}:${USER_NAME} "${PACKAGIS_ROOT_DIR}/web"
 else
-    echo "[PACKAGIST] Skip setup of packagist APP directories" 
+    echo "[PACKAGIST] Skip setup of packagist APP directories"
 fi
 
 # ==========================================================
