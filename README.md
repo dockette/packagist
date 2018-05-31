@@ -20,7 +20,7 @@ This whole project consists of 4 containers and 1 data-only container.
 - Redis (memory storage)
 - Solr (search engine)
 
-This version is [locked to](https://github.com/composer/packagist/commit/2d90743bec035e87928f4afa356ba28a1547608f) version before Packagist switched search engine to Algolia. 
+This version is [locked to](https://github.com/composer/packagist/commit/2d90743bec035e87928f4afa356ba28a1547608f) version before Packagist switched search engine to Algolia.
 
 ## Installation
 
@@ -72,7 +72,7 @@ You can provide your own SSH keys, just uncommenting lines in docker-compose.yml
 ```
 volumes:
   - ./config/ssh/config:/var/www/.ssh/config
-  - ./config/ssh/id_rsa://var/www/.ssh/id_rsa
+  - ./config/ssh/id_rsa:/var/www/.ssh/id_rsa
   - ./config/ssh/id_rsa.pub:/var/www/.ssh/id_rsa.pub
   - ./config/ssh/known_hosts:/var/www/.ssh/known_hosts
 ```
@@ -80,12 +80,12 @@ volumes:
 Don't forget to change owernership to Alpine's user www-data (82:82).
 
 ```
-sudo chown -R 82:82 config id_rsa id_rsa.pub known_hosts 
+sudo chown -R 82:82 config id_rsa id_rsa.pub known_hosts
 ```
 
 ### Solr
 
-Index your first composer package. 
+Index your first composer package.
 
 ```
 docker-compose exec packagist /srv/app/console packagist:index --no-debug --env=prod --force
