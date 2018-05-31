@@ -24,6 +24,7 @@ RUN apk update && \
         bash \
         supervisor \
         openssl \
+        openssh \
         nginx \
         php7@testing \
         php7-bcmath@testing \
