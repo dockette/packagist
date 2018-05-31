@@ -20,7 +20,7 @@ services:
       # ===================================
       #volumes:
       #  - ./config/ssh/config:/var/www/.ssh/config
-      #  - ./config/ssh/id_rsa://var/www/.ssh/id_rsa
+      #  - ./config/ssh/id_rsa:/var/www/.ssh/id_rsa
       #  - ./config/ssh/id_rsa.pub:/var/www/.ssh/id_rsa.pub
       #  - ./config/ssh/known_hosts:/var/www/.ssh/known_hosts
 
