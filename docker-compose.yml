@@ -4,7 +4,7 @@ services:
 
   packagist:
     restart: always
-    image: dockette/packagist:app
+    image: dockette/packagist:packagist
 
     ports:
       # Production mode
