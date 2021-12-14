@@ -1,6 +1,6 @@
 FROM solr:6.3-alpine
 
-MAINTAINER Milan Sulc <sulcmil@gmail.com>
+LABEL maintainer="sulcmil@gmail.com"
 
 ADD ./packagist-schema.xml /opt/solr/server/solr/configsets/data_driven_schema_configs/conf/managed-schema
 

@@ -1,6 +1,6 @@
 FROM dockette/alpine:3.7
 
-MAINTAINER Milan Sulc <sulcmil@gmail.com>
+LABEL maintainer="sulcmil@gmail.com"
 
 ENV SSH_ENABLED=true
 ENV USER_ID=82
