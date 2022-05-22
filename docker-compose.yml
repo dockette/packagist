@@ -28,8 +28,6 @@ services:
     environment:
       - APP_HOSTNAME='packagist.local:8000'
       - APP_SCHEME=http
-
-      - ALGOLIA_HOST=packagist.local:8007/search2
       - ALGOLIA_HOST=packagist.local:8000/search2
       - PACKAGIST_DATABASE_DSN=mysqli://packagist:packagist@mysql:3306/packagist?serverVersion=10.2.12
    # extra_hosts:
