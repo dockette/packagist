@@ -1,1 +1,4 @@
 /data
+.idea
+.DS_Store
+config/ssh
