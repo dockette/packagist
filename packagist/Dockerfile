@@ -1,6 +1,6 @@
 FROM dockette/php:8.0-fpm
 
-LABEL ru.modeltech="rakushinav@modeltech.ru"
+LABEL maintainer="sulcmil@gmail.com" authors="sulcmil@gmail.com,rakushinav@modeltech.ru"
 
 ENV SSH_ENABLED=true
 ENV USER_ID=82
@@ -9,28 +9,21 @@ ENV USER_WORKDIR=/var/www
 ENV PACKAGIST_DIR=/srv
 ENV NODE_VERSION=16.13.0
 ENV CRON_LOG_FILE=/var/log/cron.log
-# ADD ./patch /tmp/patch
-
-
 
 
 RUN apt-get update -y && \
 apt-get install supervisor nginx cron nodejs vim -y && \
 mv /etc/php/8.0/mods-available/xmlrpc.ini  /etc/php/8.0/ && \
-# addgroup --gid ${USER_ID} --system ${USER_NAME} && \
-adduser -u ${USER_ID} -D -h ${USER_WORKDIR} --shell --group ${USER_NAME} ${USER_NAME} && \
-git clone -b wo_polit_banner https://github.com/ModelTech/packagist.git /srv
+git clone -b solr_new https://github.com/ModelTech/packagist.git /srv
 
 
 
 RUN composer install -d /srv --no-dev --no-interaction --no-scripts -v -o
-#composer update -d /srv nelmio/solarium-bundle pagerfanta/solarium-adapter
 # PHP
 # WEB
 ADD ./dist.env.local /srv/.env.local
 ADD ./web/app_dev.php /srv/web/app_dev.php
 ADD ./php/php-fpm.conf /usr/local/etc/php-fpm.conf
-# /etc/php/7.1/fpm/php-fpm.conf
 
 # NGINX
 ADD ./nginx/nginx.conf /etc/nginx/nginx.conf

@@ -10,10 +10,10 @@ services:
     ports:
       # Production mode
       - 8000:8000
-      - 80:8000
+#      - 80:8000
       #- 443:8000
       # Development mode
-      - 9000:9000
+     # - 9000:9000
       # Supervisor
       #- 9001:9001
 
@@ -28,7 +28,9 @@ services:
     environment:
       - APP_HOSTNAME='packagist.local:8000'
       - APP_SCHEME=http
-      - ALGOLIA_HOST=packagist.local:8000/search2
+      - APP_MAILER_DSN=null://null
+      - APP_MAILER_SENDER='your-email@example.org'
+      - APP_SEARCH_DRIVER=solr # solr or algolia
       - PACKAGIST_DATABASE_DSN=mysqli://packagist:packagist@mysql:3306/packagist?serverVersion=10.2.12
    # extra_hosts:
      # - "packagist.local:10.77.77.199"
@@ -39,7 +41,7 @@ services:
 
   mysql:
     restart: always
-    image: mariadb:latest
+    image: mariadb:10.6.4
 
     volumes:
       - ./data/mysql:/var/lib/mysql

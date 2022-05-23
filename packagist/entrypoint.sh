@@ -3,9 +3,7 @@
 PACKAGIS_ROOT_DIR=/srv
 PACKAGIS_APP_DIR=${PACKAGIS_ROOT_DIR}
 PACKAGIS_COFING_DIR=${PACKAGIS_APP_DIR}/config
-PACKAGIST_CONFIG_PARAMETERS=${PACKAGIS_COFING_DIR}/parameters.yml
 PACKAGIST_ENV_PARAMETERS=${PACKAGIS_ROOT_DIR}/.env.local
-PACKAGIST_CONFIG_PARAMETERS_TPL=${PACKAGIS_COFING_DIR}/parameters.yml.dist
 
 USER_NAME=${USER_NAME:-www-data}
 USER_WORKDIR=${USER_WORKDIR:-/var/www}
@@ -13,6 +11,11 @@ USER_SSH_DIR=${USER_WORKDIR}/.ssh
 USER_SSH_TPL_DIR=/tpl/ssh
 
 CRON_LOG_FILE=${CRON_LOG_FILE:-/var/log/cron.log}
+CRON_SCRIPT=/etc/periodic/onemin/packagist
+
+
+APP_SCHEME=${APP_SCHEME:=https}
+APP_SEARCH_DRIVER=${APP_SEARCH_DRIVER:=solr}
 
 echo "[PACKAGIST] SSH_ENABLED=${SSH_ENABLED}"
 echo "[PACKAGIST] USER_NAME=${USER_NAME}"
@@ -22,15 +25,13 @@ echo "[PACKAGIST] USER_SSH_TPL_DIR=${USER_SSH_TPL_DIR}"
 echo "[PACKAGIST] PACKAGIS_ROOT_DIR=${PACKAGIS_ROOT_DIR}"
 echo "[PACKAGIST] PACKAGIS_APP_DIR=${PACKAGIS_APP_DIR}"
 echo "[PACKAGIST] PACKAGIS_COFING_DIR=${PACKAGIS_COFING_DIR}"
-echo "[PACKAGIST] PACKAGIST_CONFIG_PARAMETERS=${PACKAGIST_CONFIG_PARAMETERS}"
 echo "[PACKAGIST] CRON_ENABLED=${CRON_ENABLED}"
 echo "[PACKAGIST] CRON_LOG_FILE=${CRON_LOG_FILE}"
-
+echo "[PACKAGIST] APP_SEARCH_DRIVER=${APP_SEARCH_DRIVER}"
 # ==========================================================
 # ==========================================================
 # ==========================================================
 
-APP_SCHEME=${APP_SCHEME:=https}
 
 PACKAGIST_DATABASE_HOST=${PACKAGIST_DATABASE_HOST:=mysql}
 PACKAGIST_DATABASE_NAME=${PACKAGIST_DATABASE_NAME:=packagist}
@@ -38,44 +39,44 @@ PACKAGIST_DATABASE_USER=${PACKAGIST_DATABASE_USER:=packagist}
 PACKAGIST_DATABASE_PASSWORD=${PACKAGIST_DATABASE_PASSWORD:=packagist}
 DATABASE_URL=${DATABASE_URL:=mysqli://${PACKAGIST_DATABASE_USER}:${PACKAGIST_DATABASE_PASSWORD}@${PACKAGIST_DATABASE_HOST}:${PACKAGIST_DATABASE_PORT:=3306}/${PACKAGIST_DATABASE_NAME}?serverVersion=10.2.12}
 
-# PACKAGIST_REDIS_DNS=${PACKAGIST_REDIS_HOST:=redis://redis/2}
-# PACKAGIST_REDIS_CACHE_DNS=${PACKAGIST_REDIS_CACHE_DNS:=redis://redis/1}
-# PACKAGIST_REDIS_DNS_TEST=${PACKAGIST_REDIS_DNS_TEST:=redis://redis/14}
-# PACKAGIST_REDIS_DNS_SESSION=${PACKAGIST_REDIS_DNS_SESSION:=redis://redis/2}
-
 REDIS_URL=${REDIS_URL:=redis://redis}
 REDIS_CACHE_URL=${REDIS_CACHE_URL:=${REDIS_URL}}
 
-SOLR_HOST=${SOLR_HOST:=solr}
-SOLR_PORT=${SOLR_PORT:=8983}
-SOLR_CORE=${SOLR_CORE:=packagist}
-
-PACKAGIST_SECRET=${PACKAGIST_SECRET:=EAKQr17ZAGMd6kVSC49KHintVvCZAFCIjGhms3v6G4EflNoY4E}
-PACKAGIST_REMEMBER_ME_SECRET=${PACKAGIST_REMEMBER_ME_SECRET:=C4OGyv6kdNoD5syhF2MRK7uAGD0JY806ciwTh0X96cMaTQr270}
+# APP_REMEMBER_ME_SECRET
+# APP_SECRET
 
 # ==========================================================
 # ==========================================================
 # ==========================================================
-
-# Copy & replace packagist parameters
-# echo "[Packagist] Copying parameters.yml.dist to parameters.yml"
-# cp ${PACKAGIST_CONFIG_PARAMETERS_TPL} ${PACKAGIST_CONFIG_PARAMETERS}
 
 echo "[Packagist] Configure .env.local"
 
 sed -i -- "s#APP_HOSTNAME=packagist.local#APP_HOSTNAME=${APP_HOSTNAME}#g" ${PACKAGIST_ENV_PARAMETERS}
 sed -i -- "s#APP_SCHEME=https#APP_SCHEME=${APP_SCHEME}#g" ${PACKAGIST_ENV_PARAMETERS}
+
+# Self-hosted algolia Api entry point (via SOLR)
+if [[ "$APP_SEARCH_DRIVER" == "solr" ]]; then
+    ALGOLIA_HOST=${ALGOLIA_HOST:=${APP_HOSTNAME}/search2}
+    ALGOLIA_PROTOCOL=${APP_SCHEME}
+
+    SOLR_HOST=${SOLR_HOST:=solr}
+    SOLR_PORT=${SOLR_PORT:=8983}
+    SOLR_CORE=${SOLR_CORE:=packagist}
+    sed -i -- "s#SOLR_HOST=solr#SOLR_HOST=${SOLR_HOST}#g" ${PACKAGIST_ENV_PARAMETERS}
+    sed -i -- "s#SOLR_PORT=8983#SOLR_PORT=${SOLR_PORT}#g" ${PACKAGIST_ENV_PARAMETERS}
+    sed -i -- "s#SOLR_CORE=solr#SOLR_CORE=${SOLR_CORE}#g" ${PACKAGIST_ENV_PARAMETERS}
+
+    sed -i -- "s#packagist:index#packagist:solr:index#g" ${CRON_SCRIPT}
+fi
+
+
 #sed -i -- "s#ALGOLIA_PROTOCOL=https:#ALGOLIA_PROTOCOL=${ALGOLIA_PROTOCOL}#g" ${PACKAGIST_ENV_PARAMETERS}
 # sed -i -- "s#ALGOLIA_HOST=#ALGOLIA_HOST=${ALGOLIA_HOST}#g" ${PACKAGIST_ENV_PARAMETERS}
-sed -i -- "s#APP_MAILER_FROM_EMAIL=#APP_MAILER_FROM_EMAIL=${APP_MAILER_SENDER}#g" ${PACKAGIST_ENV_PARAMETERS}
-sed -i -- "s#MAILER_SENDER=your-email@example.org#MAILER_SENDER=${APP_MAILER_SENDER}#g" ${PACKAGIST_ENV_PARAMETERS}
-sed -i -- "s#MAILER_DSN=null://null#MAILER_DSN=${APP_MAILER_DSN}#g" ${PACKAGIST_ENV_PARAMETERS}
+sed -i -- "s#APP_MAILER_FROM_EMAIL=#APP_MAILER_FROM_EMAIL=${APP_MAILER_SENDER:=your-email@example.org}#g" ${PACKAGIST_ENV_PARAMETERS}
+sed -i -- "s#MAILER_SENDER=your-email@example.org#MAILER_SENDER=${APP_MAILER_SENDER:=your-email@example.org}#g" ${PACKAGIST_ENV_PARAMETERS}
+sed -i -- "s#MAILER_DSN=null://null#MAILER_DSN=${APP_MAILER_DSN:=null://null}#g" ${PACKAGIST_ENV_PARAMETERS}
 
 sed -i -- "s#DATABASE_URL="mysqli://packagist:packagist@mysql:3306/packagist?serverVersion=10.2.12"#DATABASE_URL=${DATABASE_URL}#g" ${PACKAGIST_ENV_PARAMETERS}
-
-sed -i -- "s#SOLR_HOST=solr#SOLR_HOST=${SOLR_HOST}#g" ${PACKAGIST_ENV_PARAMETERS}
-sed -i -- "s#SOLR_PORT=8983#SOLR_PORT=${SOLR_PORT}#g" ${PACKAGIST_ENV_PARAMETERS}
-sed -i -- "s#SOLR_CORE=solr#SOLR_CORE=${SOLR_CORE}#g" ${PACKAGIST_ENV_PARAMETERS}
 
 # redis
 sed -i -- "s#REDIS_URL=redis://redis#REDIS_URL=${REDIS_URL}#g" ${PACKAGIST_ENV_PARAMETERS}
@@ -96,9 +97,6 @@ sed -i -- "s#REDIS_CACHE_URL=\${REDIS_URL}#REDIS_CACHE_URL=${REDIS_CACHE_URL}#g"
 
 # sed -i -- "s#solr_host: 127.0.0.1#solr_host: ${PACKAGIST_SOLR_HOST}#g" ${PACKAGIST_CONFIG_PARAMETERS}
 # sed -i -- "s#solr_core: collection1#solr_core: ${PACKAGIST_SOLR_CORE}#g" ${PACKAGIST_CONFIG_PARAMETERS}
-
-# sed -i -- "s#secret: CHANGE_ME_IN_PROD#secret: ${PACKAGIST_SECRET}#g" ${PACKAGIST_CONFIG_PARAMETERS}
-# sed -i -- "s#remember_me.secret: CHANGE_ME_IN_PROD#remember_me.secret: ${PACKAGIST_REMEMBER_ME_SECRET}#g" ${PACKAGIST_CONFIG_PARAMETERS}
 
 # ==========================================================
 # ==========================================================

@@ -20,7 +20,7 @@ This whole project consists of 4 containers and 1 data-only container.
 - Redis (memory storage)
 - Solr (search engine)
 
-This version contains the latest version of Packagist [fork with a search engine for Algolia and Solr](https://github.com/ModelTech/packagist). By default it is set to Solr
+This version contains a [fork packagist](https://github.com/ModelTech/packagist) modified to support "Solr" for self-hosted. Also, if necessary, you can run the original version with the "Algolia" search engine by changing the configuration. At the same time, you must have an account in Algolia and network access from your packagist to the Algolia servers.
 
 ## Installation
 
@@ -40,7 +40,7 @@ You should change prepared configuration.
 
 - `APP_HOSTNAME` (packagist.local:8000)
 - `APP_SCHEME` (http)
-- `ALGOLIA_HOST` (packagist.local:8000/search2) # "/search2" - route for SOLR search engine, emulate Algolia api 
+- `APP_SEARCH_DRIVER` (solr) # solr or algolia 
 - `PACKAGIST_DATABASE_DSN` (mysqli://packagist:packagist@mysql:3306/packagist?serverVersion=10.2.12)
 
 ## Usage
@@ -98,4 +98,4 @@ docker-compose exec packagist /srv/app/console packagist:index --no-debug --env=
 Cron is configured per 1 minute. You can change by replacing these files:
 
 - /etc/crontabs/root
-- /etc/periodic/1min/packagist
+- /etc/periodic/onemin/packagist
