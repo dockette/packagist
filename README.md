@@ -20,7 +20,7 @@ This whole project consists of 4 containers and 1 data-only container.
 - Redis (memory storage)
 - Solr (search engine)
 
-This version is [locked to](https://github.com/composer/packagist/commit/2d90743bec035e87928f4afa356ba28a1547608f) version before Packagist switched search engine to Algolia.
+This version contains a [fork packagist](https://github.com/ModelTech/packagist) modified to support "Solr" for self-hosted. Also, if necessary, you can run the original version with the "Algolia" search engine by changing the configuration. At the same time, you must have an account in Algolia and network access from your packagist to the Algolia servers.
 
 ## Installation
 
@@ -38,8 +38,10 @@ chown 8983:8983 data/solr
 
 You should change prepared configuration.
 
-- `PACKAGIST_DATABASE_USER` (packagist)
-- `PACKAGIST_DATABASE_PASSWORD` (packagist)
+- `APP_HOSTNAME` (packagist.local:8000)
+- `APP_SCHEME` (http)
+- `APP_SEARCH_DRIVER` (solr) # solr or algolia 
+- `PACKAGIST_DATABASE_DSN` (mysqli://packagist:packagist@mysql:3306/packagist?serverVersion=10.2.12)
 
 ## Usage
 
@@ -72,8 +74,8 @@ You can provide your own SSH keys, just uncommenting lines in docker-compose.yml
 ```
 volumes:
   - ./config/ssh/config:/var/www/.ssh/config
-  - ./config/ssh/id_rsa:/var/www/.ssh/id_rsa
-  - ./config/ssh/id_rsa.pub:/var/www/.ssh/id_rsa.pub
+  - ./config/ssh/id_ed25519:/var/www/.ssh/id_ed25519
+  - ./config/ssh/id_ed25519.pub:/var/www/.ssh/id_ed25519.pub
   - ./config/ssh/known_hosts:/var/www/.ssh/known_hosts
 ```
 
@@ -96,4 +98,4 @@ docker-compose exec packagist /srv/app/console packagist:index --no-debug --env=
 Cron is configured per 1 minute. You can change by replacing these files:
 
 - /etc/crontabs/root
-- /etc/periodic/1min/packagist
+- /etc/periodic/onemin/packagist
