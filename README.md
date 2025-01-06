@@ -2,6 +2,9 @@
 
 Well-prepeared Packagist docker image(s). Run you own composer packagist portal in Docker.
 
+> [!TIP]
+> [since 2024] Use awesome self-hosted Packagist/Composer/Satis repository with unlimited private repos called [Packeton](https://bit.ly/3PosO4p).
+
 -----
 
 [![Docker Stars](https://img.shields.io/docker/stars/dockette/packagist.svg?style=flat)](https://hub.docker.com/r/dockette/packagist/)
