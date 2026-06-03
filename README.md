@@ -1,4 +1,11 @@
-# Packagist
+<h1 align=center>Dockette / Packagist</h1>
+
+<p align=center>
+   <a href="https://github.com/dockette/packagist/actions"><img src="https://github.com/dockette/packagist/actions/workflows/docker.yml/badge.svg" alt="GitHub Actions"></a>
+   <a href="https://hub.docker.com/r/dockette/packagist"><img src="https://img.shields.io/docker/pulls/dockette/packagist.svg" alt="Docker Hub pulls"></a>
+   <a href="https://github.com/sponsors/f3l1x"><img src="https://img.shields.io/badge/sponsor-GitHub%20Sponsors-ea4aaa" alt="GitHub Sponsors"></a>
+   <a href="https://github.com/orgs/dockette/discussions"><img src="https://img.shields.io/badge/support-discussions-6f42c1" alt="Support/Discussions"></a>
+</p>
 
 Well-prepeared Packagist docker image(s). Run you own composer packagist portal in Docker.
 
@@ -6,13 +13,6 @@ Well-prepeared Packagist docker image(s). Run you own composer packagist portal 
 > [since 2024] Use awesome self-hosted Packagist/Composer/Satis repository with unlimited private repos called [Packeton](https://bit.ly/3PosO4p).
 
 -----
-
-[![Docker Stars](https://img.shields.io/docker/stars/dockette/packagist.svg?style=flat)](https://hub.docker.com/r/dockette/packagist/)
-[![Docker Pulls](https://img.shields.io/docker/pulls/dockette/packagist.svg?style=flat)](https://hub.docker.com/r/dockette/packagist/)
-
-## Discussion / Help
-
-[![Join the chat](https://img.shields.io/gitter/room/dockette/dockette.svg?style=flat-square)](https://gitter.im/dockette/dockette?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Architecture
 
@@ -24,6 +24,8 @@ This whole project consists of 4 containers and 1 data-only container.
 - Solr (search engine)
 
 This version is [locked to](https://github.com/composer/packagist/commit/2d90743bec035e87928f4afa356ba28a1547608f) version before Packagist switched search engine to Algolia.
+
+The image is kept as a legacy stack for existing Solr-based Packagist deployments. CI intentionally uses limited Docker image and compose smoke tests instead of bootstrapping a full Packagist instance.
 
 ## Installation
 
@@ -102,4 +104,5 @@ Cron is configured per 1 minute. You can change by replacing these files:
 - /etc/periodic/1min/packagist
 
 ## Maintenance
+
 See [how to contribute](https://github.com/dockette/.github/blob/master/CONTRIBUTING.md) to this package. Consider to [support](https://github.com/sponsors/f3l1x) **f3l1x**. Thank you for using this package.
